@@ -1,0 +1,49 @@
+// SYNTAX TEST "source.nabi" "attributes"
+    #[test] #[inline(always)] #[derive(Debug, dep::Name)]
+//  ^^ meta.attribute.nabi punctuation.definition.attribute.begin.nabi
+//    ^^^^ meta.attribute.nabi entity.name.function.attribute.nabi
+//        ^ meta.attribute.nabi punctuation.definition.attribute.end.nabi
+//            ^^^^^^ entity.name.function.attribute.nabi
+//                   ^^^^^^ meta.attribute.nabi variable.other.nabi
+//                              ^^^^^^ entity.name.function.attribute.nabi
+//                                     ^^^^^ meta.attribute.nabi entity.name.type.nabi
+//                                            ^^^ meta.attribute.nabi entity.name.namespace.nabi
+//                                                 ^^^^ meta.attribute.nabi entity.name.type.nabi
+    #![allow(unused)] #[dep::attr] #[doc = "a ] b"] fn f() {}
+//  ^^^ meta.attribute.nabi punctuation.definition.attribute.begin.nabi
+//     ^^^^^ entity.name.function.attribute.nabi
+//                      ^^^^^^^^^ meta.attribute.nabi entity.name.function.attribute.nabi
+//                                       ^ meta.attribute.nabi keyword.operator.assignment.nabi
+//                                         ^^^^^^^ meta.attribute.nabi string.quoted.double.nabi
+//                                                ^ meta.attribute.nabi punctuation.definition.attribute.end.nabi
+//                                                  ^^ storage.type.function.nabi - meta.attribute.nabi
+    #[deprecated(since = "0.1.6", note = "use g")]
+//    ^^^^^^^^^^ entity.name.function.attribute.nabi
+//               ^^^^^ meta.attribute.nabi variable.other.nabi
+//                       ^^^^^^^ meta.attribute.nabi string.quoted.double.nabi
+    #[cfg(target_os = "linux",
+          feature = "x")] #[a([1, 2])] x;
+//        ^^^^^^^ meta.attribute.nabi variable.other.nabi
+//                      ^ meta.attribute.nabi punctuation.definition.attribute.end.nabi
+//                        ^^^^^^^^^^^^ meta.attribute.nabi
+//                                     ^ variable.other.nabi - meta.attribute.nabi
+    #[infix("<-", like = "<")] #[literal(number "kg")] #[keyword(unless)]
+//    ^^^^^ entity.name.function.attribute.nabi
+//                               ^^^^^^^ entity.name.function.attribute.nabi
+//                                                       ^^^^^^^ entity.name.function.attribute.nabi
+    #[sealed] trait T { } #[internal] pub fn f() { } #[discardable] fn g() -> i32 { 1 } #[non_exhaustive] struct R { a: i32 }
+//    ^^^^^^ meta.attribute.nabi entity.name.function.attribute.nabi
+//            ^^^^^ storage.type.nabi - meta.attribute.nabi
+//                          ^^^^^^^^ entity.name.function.attribute.nabi
+//                                    ^^^ storage.modifier.nabi - meta.attribute.nabi
+//                                                     ^^^^^^^^^^^ entity.name.function.attribute.nabi
+//                                                                                        ^^^^^^^^^^^^^^ entity.name.function.attribute.nabi
+//                                                                                                        ^^^^^^ storage.type.nabi - meta.attribute.nabi
+    #[literal(number "m")] pub fn meters(v: f64) -> Len { Len(v) }
+//    ^^^^^^^ meta.attribute.nabi entity.name.function.attribute.nabi
+//                   ^^^ meta.attribute.nabi string.quoted.double.nabi
+//                         ^^^ storage.modifier.nabi
+//                                ^^^^^^ entity.name.function.nabi
+// tree-sitter: skip, `# [x]` is not an attribute
+    # [x] #x
+//  ^ - meta.attribute.nabi

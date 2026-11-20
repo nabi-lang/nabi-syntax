@@ -1,0 +1,22 @@
+// Keyword lists of Nabi and NABION: language, TextMate scope (its row in
+// classes.nabion), words. Contextual words are keywords only in some
+// positions. The TextMate and tree-sitter runners check against these
+// lists; nabi.vim generates its keyword lines from them. One tuple a line.
+[
+    ("nabi", "keyword.control", ["if", "else", "match", "while", "loop", "for", "in", "return", "break", "continue", "try", "throw", "yield", "await", "catch", "finally", "using"]),
+    ("nabi", "storage.type", ["fn", "let", "struct", "enum", "trait", "impl", "mod", "type", "union"]),
+    ("nabi", "storage.type.any", ["any"]),
+    ("nabi", "storage.type.some", ["some"]),
+    ("nabi", "storage.modifier", ["pub", "unsafe", "async", "ref", "const", "static", "extern", "mut"]),
+    ("nabi", "storage.modifier.visibility", ["pkg", "sub"]),
+    ("nabi", "keyword.other", ["use", "where", "throws", "rethrows"]),
+    ("nabi", "keyword.other.path", ["pkg", "sup"]),
+    ("nabi", "keyword.operator.word", ["as", "is"]),
+    ("nabi", "constant.language.boolean", ["true", "false"]),
+    ("nabi", "constant.language.none", ["none"]),
+    ("nabi", "variable.language.self", ["self", "Self"]),
+    ("nabi", "support.type.primitive", ["i8", "i16", "i32", "i64", "i128", "isize", "u8", "u16", "u32", "u64", "u128", "usize", "f16", "bf16", "f32", "f64", "bool", "char", "str", "int", "float", "c_char"]),
+    ("nabi", "keyword.other.reserved", ["macro", "defer", "dyn", "move", "gen", "do"]),
+    ("nabion", "constant.language.boolean", ["true", "false"]),
+    ("nabion", "constant.language.none", ["none"]),
+]

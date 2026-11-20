@@ -1,0 +1,44 @@
+// SYNTAX TEST "source.nabi" "plain, raw and byte strings, escapes"
+    let s = "a\tb\"c\\ \x41 \u{1F600} \u{1_F600}";
+//          ^ string.quoted.double.nabi punctuation.definition.string.begin.nabi
+//           ^ string.quoted.double.nabi
+//            ^^ string.quoted.double.nabi constant.character.escape.nabi
+//               ^^ constant.character.escape.nabi
+//                  ^^ constant.character.escape.nabi
+//                     ^^^^ constant.character.escape.nabi
+//                          ^^^^^^^^^ constant.character.escape.nabi
+//                                    ^^^^^^^^^^ constant.character.escape.nabi
+//                                              ^ string.quoted.double.nabi punctuation.definition.string.end.nabi
+//                                               ^ punctuation.terminator.statement.nabi
+    "bad \q escape";
+//       ^^ string.quoted.double.nabi invalid.illegal.escape.nabi
+    "multi
+    line, still a string";
+//  ^^^^^^^^^^^^^^^^^^^^^ string.quoted.double.nabi
+    "line \
+//        ^ string.quoted.double.nabi constant.character.escape.nabi
+     continued";
+//   ^^^^^^^^^^ string.quoted.double.nabi
+    r"C:\path\n" + r#"has "quotes""# + r##"even "# inside"##;
+//  ^ string.quoted.double.raw.nabi storage.type.string.nabi
+//   ^ string.quoted.double.raw.nabi punctuation.definition.string.begin.nabi
+//    ^^^^^^^^^ string.quoted.double.raw.nabi - constant.character.escape.nabi
+//             ^ string.quoted.double.raw.nabi punctuation.definition.string.end.nabi
+//               ^ keyword.operator.arithmetic.nabi
+//                 ^^^^^^^^^^^^^^^^^ string.quoted.double.raw.nabi
+//                                   ^ keyword.operator.arithmetic.nabi
+//                                     ^^^^^^^^^^^^^^^^^^^^^ string.quoted.double.raw.nabi
+    b"GET /\r\n" + b"\x7F\xFF";
+//  ^ string.quoted.double.byte.nabi storage.type.string.nabi
+//   ^^^^^^ string.quoted.double.byte.nabi
+//         ^^^^ string.quoted.double.byte.nabi constant.character.escape.nabi
+//                   ^^^^^^^^ string.quoted.double.byte.nabi constant.character.escape.nabi
+    let d = date"2024-01-15" + rgb "ff800f" + x;
+//          ^^^^ string.quoted.double.nabi storage.type.string.nabi
+//              ^^^^^ string.quoted.double.nabi
+//                             ^^^ variable.other.nabi
+//                                 ^^^ string.quoted.double.nabi
+// tree-sitter: skip, `rb"x"` is not Nabi
+    rb"x" br"y"
+//  ^^ variable.other.nabi - storage.type.string.nabi
+//    ^^^ string.quoted.double.nabi

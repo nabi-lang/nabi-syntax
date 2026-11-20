@@ -1,0 +1,11 @@
+// SYNTAX TEST "source.nabi" "unicode identifiers"
+    let 변수 = α + Δt + σ² + x₀ + データ;
+//      ^^ variable.other.nabi
+//         ^ keyword.operator.assignment.nabi
+//           ^ variable.other.nabi
+//               ^^ entity.name.type.nabi
+//                              ^^^ variable.other.nabi
+//                                 ^ punctuation.terminator.statement.nabi
+    fn 합계(값: i32) -> i32 { 값 }
+//     ^^ entity.name.function.nabi
+//        ^ variable.parameter.nabi

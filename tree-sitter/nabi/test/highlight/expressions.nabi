@@ -1,0 +1,82 @@
+fn main() -> i32 {
+    let p = Point { x: 1, y };
+    //      ^ type
+    //              ^ property
+    //                    ^ property
+    let s = f"x = {p.x:>8} {{}}\n";
+    //      ^ string
+    //         ^ string
+    //            ^ punctuation.special
+    //               ^ property
+    //                ^ string.special
+    //                 ^ string.special
+    //                         ^ string.escape
+    let r = r#"raw "q""#;
+    //      ^ string
+    let c = 'a';
+    //      ^ character
+    let n = none ?? 1_000i64;
+    //      ^ constant.builtin
+    //           ^ operator
+    //              ^ number
+    let v = try? parse(s) catch e { 0 };
+    //      ^ keyword.exception
+    //         ^ operator
+    //           ^ function.call
+    //                    ^ keyword.exception
+    let m = [move xs] || xs.len();
+    //       ^ keyword.modifier
+    xs.iter().for_each |x| { print(x); }
+    // ^ function.call
+    //                  ^ variable.parameter
+    'outer: for i in 0..10 { break 'outer; }
+    // <- label
+    //      ^ keyword.repeat
+    //            ^ keyword.operator
+    //                ^ operator
+    let k = a as i64 is i64;
+    //        ^ keyword.operator
+    //           ^ type.builtin
+    //               ^ keyword.operator
+    println!("hi");
+    // ^ function.macro
+    let q = Shape::Circle(1.0);
+    //      ^ type
+    //             ^ type
+    if true { await go(); }
+    // <- keyword.conditional
+    // ^ boolean
+    //        ^ keyword.coroutine
+    let i = x !in 0..n && y in ys;
+    //        ^ keyword.operator
+    //             ^ operator
+    //                      ^ keyword.operator
+    let p = -x ** 2 .?? d;
+    //         ^ operator
+    //              ^ operator
+    y .**= x; y .= x;
+    //^ operator
+    //          ^ operator
+    let e = try? f() ?? d;
+    //               ^ operator
+    let b = b'0';
+    //      ^ character
+    for ref q in qs { q = 0; }
+    //  ^ keyword.modifier
+    let f = |(k, v)| k;
+    //        ^ variable.parameter
+    //           ^ variable.parameter
+    let t = date"2024-01-15" |> days;
+    //      ^ string
+    //               ^ string
+    //                       ^ operator
+    y .<<= 1; let h: f16 = 0.5bf16 as f16;
+    //^ operator
+    //               ^ type.builtin
+    let [first, ..rest] = xs;
+    //   ^ variable
+    //            ^ variable
+    let s = f"{x=}";
+    //         ^ variable
+    return 0;
+}

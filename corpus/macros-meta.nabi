@@ -1,0 +1,35 @@
+// SYNTAX TEST "source.nabi" "macro calls, macro imports and meta template tokens"
+    println!("x"); vec![1, 2]; m!{a}; dep::log!(1); use dep::log!;
+//  ^^^^^^^ entity.name.function.macro.nabi
+//         ^ entity.name.function.macro.nabi
+//                 ^^^^ entity.name.function.macro.nabi
+//                             ^^ entity.name.function.macro.nabi
+//                                    ^^^ entity.name.namespace.nabi
+//                                         ^^^^ entity.name.function.macro.nabi
+//                                                  ^^^ keyword.other.nabi
+//                                                           ^^^^ entity.name.function.macro.nabi
+    a != b; x.y != 1; r#gen!(2); !ready;
+//    ^^ keyword.operator.comparison.nabi - entity.name.function.macro.nabi
+//            ^ variable.other.member.nabi
+//              ^ keyword.operator.comparison.nabi
+//                    ^^^^^^ entity.name.function.macro.nabi
+//                               ^ keyword.operator.logical.nabi
+    #[impl_macro(sq)] pub @macro { (@x: expr) => { @x * @x } }
+//  ^^^^^^^^^^^^^^^^^ meta.attribute.nabi
+//                        ^ keyword.other.template.nabi punctuation.definition.template.nabi
+//                         ^^^^^ keyword.other.template.nabi
+//                                  ^^ keyword.other.template.nabi
+//                                      ^^^^ variable.other.nabi
+//                                                 ^^ keyword.other.template.nabi
+    #[impl_derive(MyHash)] pub @derive { impl MyHash for @Self { } }
+//                             ^^^^^^^ keyword.other.template.nabi
+//                                       ^^^^ storage.type.nabi
+//                                                       ^^^^^ keyword.other.template.nabi
+    @for_fields { h = h ^ self.@field.hash(); } @field.name; @item.body;
+//  ^^^^^^^^^^^ keyword.other.template.nabi
+//                        ^^^^ variable.language.self.nabi
+//                             ^^^^^^ keyword.other.template.nabi
+//                                    ^^^^ entity.name.function.call.nabi
+//                                              ^^^^^^ keyword.other.template.nabi
+//                                                     ^^^^ variable.other.member.nabi
+//                                                           ^^^^^ keyword.other.template.nabi

@@ -1,0 +1,107 @@
+// SYNTAX TEST "source.nabi" "operators and punctuation"
+    a + b - c * d / e % f %% g;
+//    ^ keyword.operator.arithmetic.nabi
+//        ^ keyword.operator.arithmetic.nabi
+//            ^ keyword.operator.arithmetic.nabi
+//                ^ keyword.operator.arithmetic.nabi
+//                    ^ keyword.operator.arithmetic.nabi
+//                        ^^ keyword.operator.arithmetic.nabi
+    f(a == b, b != c, c < d, d > e, e <= f, f >= g);
+//      ^^ keyword.operator.comparison.nabi
+//              ^^ keyword.operator.comparison.nabi
+//                      ^ keyword.operator.comparison.nabi
+//                             ^ keyword.operator.comparison.nabi
+//                                    ^^ keyword.operator.comparison.nabi
+//                                            ^^ keyword.operator.comparison.nabi
+    a && b || !c; a & b | c ^ d | ~e << f >> g;
+//    ^^ keyword.operator.logical.nabi
+//         ^^ keyword.operator.logical.nabi
+//            ^ keyword.operator.logical.nabi
+//                  ^ keyword.operator.bitwise.nabi
+//                      ^ keyword.operator.bitwise.nabi
+//                          ^ keyword.operator.bitwise.nabi
+//                                ^ keyword.operator.bitwise.nabi
+//                                   ^^ keyword.operator.bitwise.nabi
+//                                        ^^ keyword.operator.bitwise.nabi
+    a = 1; a += 1; a -= 1; a %%= 2; a <<= 1; a >>= 1; a ^= 1;
+//    ^ keyword.operator.assignment.nabi
+//           ^^ keyword.operator.assignment.compound.nabi
+//                   ^^ keyword.operator.assignment.compound.nabi
+//                           ^^^ keyword.operator.assignment.compound.nabi
+//                                    ^^^ keyword.operator.assignment.compound.nabi
+//                                             ^^^ keyword.operator.assignment.compound.nabi
+//                                                      ^^ keyword.operator.assignment.compound.nabi
+    a .+ b; a.+b; a .== b; a .&& b; a.%%b;
+//    ^^ keyword.operator.broadcast.nabi
+//           ^^ keyword.operator.broadcast.nabi
+//                  ^^^ keyword.operator.broadcast.nabi
+//                           ^^^ keyword.operator.broadcast.nabi
+//                                   ^^^ keyword.operator.broadcast.nabi
+    x?.y ?? z; f()?; 0..n; 0..=n; a::b; |x| -> T { x }; match m { x => v };
+//   ^^ keyword.operator.optional.nabi
+//     ^ variable.other.member.nabi
+//       ^^ keyword.operator.optional.nabi
+//                ^ keyword.operator.optional.nabi
+//                    ^^ keyword.operator.range.nabi
+//                          ^^^ keyword.operator.range.nabi
+//                                 ^^ punctuation.separator.namespace.nabi
+//                                      ^ keyword.operator.bitwise.nabi
+//                                          ^^ keyword.operator.arrow.nabi
+//                                                                  ^^ keyword.operator.arrow.nabi
+    a × b ⋅ c ÷ d ∘ e + √f; f(a ≡ b, a ≠ b, a ≤ b, a ≥ b, a ∈ b, a ∉ b, a ⊂ b, a ⊆ b, a ∪ b, a ∩ b);
+//    ^ keyword.operator.math.nabi
+//        ^ keyword.operator.math.nabi
+//            ^ keyword.operator.math.nabi
+//                      ^ keyword.operator.math.nabi
+//                                     ^ keyword.operator.math.nabi
+//                                                          ^ keyword.operator.math.nabi
+//                                                                                             ^ keyword.operator.math.nabi
+    (a, b); [c]; {d}; f(e: x.y);
+//  ^ punctuation.brackets.round.nabi
+//    ^ punctuation.separator.comma.nabi
+//       ^ punctuation.brackets.round.nabi
+//        ^ punctuation.terminator.statement.nabi
+//          ^ punctuation.brackets.square.nabi
+//               ^ punctuation.brackets.curly.nabi
+//                       ^ punctuation.separator.colon.nabi
+//                          ^ punctuation.accessor.nabi
+    x ** 2; x **= 2; a .** b; a .?? b; -x**2;
+//    ^^ keyword.operator.arithmetic.nabi
+//            ^^^ keyword.operator.assignment.compound.nabi
+//                     ^^^ keyword.operator.broadcast.nabi
+//                              ^^^ keyword.operator.broadcast.nabi
+//                                       ^^ keyword.operator.arithmetic.nabi
+    y .= x; y .+= x; y .-= x; y .*= x; y ./= x; y .%= x; y .**= x; y .== x;
+//    ^^ keyword.operator.assignment.compound.nabi
+//            ^^^ keyword.operator.assignment.compound.nabi
+//                     ^^^ keyword.operator.assignment.compound.nabi
+//                              ^^^ keyword.operator.assignment.compound.nabi
+//                                       ^^^ keyword.operator.assignment.compound.nabi
+//                                                ^^^ keyword.operator.assignment.compound.nabi
+//                                                         ^^^^ keyword.operator.assignment.compound.nabi
+//                                                                   ^^^ keyword.operator.broadcast.nabi
+    y .%%= x; y .&= m; y .|= m; y .^= m; y .<<= 1; y .>>= 1; y .<= x; xs |> f(a) |> g;
+//    ^^^^ keyword.operator.assignment.compound.nabi
+//              ^^^ keyword.operator.assignment.compound.nabi
+//                       ^^^ keyword.operator.assignment.compound.nabi
+//                                ^^^ keyword.operator.assignment.compound.nabi
+//                                         ^^^^ keyword.operator.assignment.compound.nabi
+//                                                   ^^^^ keyword.operator.assignment.compound.nabi
+//                                                             ^^^ keyword.operator.broadcast.nabi
+//                                                                       ^^ keyword.operator.pipe.nabi
+//                                                                          ^ entity.name.function.call.nabi
+//                                                                               ^^ keyword.operator.pipe.nabi
+    f(x in xs, x !in 0..n, a < b <= c); (a, b) = (b, a); let e = try? f() ?? d;
+//      ^^ keyword.control.nabi
+//               ^^^ keyword.operator.word.nabi
+//                    ^^ keyword.operator.range.nabi
+//                               ^^ keyword.operator.comparison.nabi
+//                                             ^ keyword.operator.assignment.nabi
+//                                                               ^^^ keyword.control.nabi
+//                                                                        ^^ keyword.operator.optional.nabi
+    a[1:, ::2, .., 0] = b[:, none]; let m = [[1.0, 2.0], [3.0, 4.0]];
+//     ^ punctuation.separator.colon.nabi
+//        ^^ punctuation.separator.namespace.nabi
+//             ^^ keyword.operator.range.nabi
+//                           ^^^^ constant.language.none.nabi
+//                                          ^^ punctuation.brackets.square.nabi

@@ -1,0 +1,46 @@
+// SYNTAX TEST "source.nabi" "chars, byte chars and labels"
+    f('A', '세', '\n', '\'', '\x41', '\u{1F600}', c'A', c'\x7F');
+//    ^^^ string.quoted.single.char.nabi
+//    ^ string.quoted.single.char.nabi punctuation.definition.string.begin.nabi
+//     ^ string.quoted.single.char.nabi
+//      ^ string.quoted.single.char.nabi punctuation.definition.string.end.nabi
+//         ^^^ string.quoted.single.char.nabi
+//              ^^^^ string.quoted.single.char.nabi
+//               ^^ string.quoted.single.char.nabi constant.character.escape.nabi
+//                    ^^^^ string.quoted.single.char.nabi
+//                          ^^^^^^ string.quoted.single.char.nabi
+//                                   ^^^^^^^^^ string.quoted.single.char.nabi constant.character.escape.nabi
+//                                               ^ string.quoted.single.byte.nabi storage.type.string.nabi
+//                                                ^^^ string.quoted.single.byte.nabi
+//                                                     ^^^^^^^ string.quoted.single.byte.nabi
+    'outer: loop { break 'outer; continue 'a; }
+//  ^ entity.name.label.nabi punctuation.definition.label.nabi
+//   ^^^^^ entity.name.label.nabi
+//        ^ punctuation.separator.colon.nabi
+//          ^^^^ keyword.control.nabi
+//                 ^^^^^ keyword.control.nabi
+//                       ^^^^^^ entity.name.label.nabi
+//                                        ^^ entity.name.label.nabi
+    'loop: while x { break 'loop; }
+//  ^^^^^ entity.name.label.nabi - keyword.control.nabi
+//         ^^^^^ keyword.control.nabi
+//                         ^^^^^ entity.name.label.nabi - keyword.control.nabi
+    each(xs) |x| { if x == 2 { return@each; } } let n = first(xs) |x| { return@first x > 1 }; return @x;
+//                             ^^^^^^ keyword.control.nabi
+//                                   ^ punctuation.definition.label.nabi - keyword.other.template.nabi
+//                                    ^^^^ entity.name.label.nabi - keyword.other.template.nabi
+//                                                                      ^^^^^^ keyword.control.nabi
+//                                                                             ^^^^^ entity.name.label.nabi
+//                                                                                                   ^^ keyword.other.template.nabi
+    f(b'0', b'\n', b'\xFF'); match c { b'a'..=b'z' => 1, _ => 0 };
+//    ^ string.quoted.single.byte.nabi storage.type.string.nabi
+//     ^^^ string.quoted.single.byte.nabi
+//            ^^ string.quoted.single.byte.nabi constant.character.escape.nabi
+//                 ^^^^^^^ string.quoted.single.byte.nabi
+//                                     ^^^^ string.quoted.single.byte.nabi
+//                                         ^^^ keyword.operator.range.nabi
+//                                            ^^^^ string.quoted.single.byte.nabi
+// tree-sitter: skip, `'ab` is neither a char nor a label
+    let c = 'x'; let d = 'ab;
+//          ^^^ string.quoted.single.char.nabi
+//                       ^^^ entity.name.label.nabi

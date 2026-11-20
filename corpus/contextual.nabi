@@ -1,0 +1,70 @@
+// SYNTAX TEST "source.nabi" "contextual keywords and keywords in name positions"
+    type Pair = (i32, i32); type Wrap<T> = List<T>; type Output;
+//  ^^^^ storage.type.nabi
+//       ^^^^ entity.name.type.nabi
+//                          ^^^^ storage.type.nabi
+//                                                  ^^^^ storage.type.nabi
+    let type = 1; let in = 3; f(in, type); x = static.len();
+//      ^^^^ variable.other.nabi - storage.type.nabi
+//                    ^^ variable.other.nabi - keyword.control.nabi
+//                              ^^ variable.other.nabi
+//                                  ^^^^ variable.other.nabi
+//                                             ^^^^^^ variable.other.nabi
+    struct Token { type: Kind; for: str; match: i32; }
+//                 ^^^^ variable.other.nabi - storage.type.nabi
+//                       ^^^^ entity.name.type.nabi
+//                             ^^^ variable.other.nabi - keyword.control.nabi
+//                                       ^^^^^ variable.other.nabi - keyword.control.nabi
+    let k = tok.type + s.match(p) + e.for;
+//              ^^^^ variable.other.member.nabi - storage.type.nabi
+//                       ^^^^^ entity.name.function.call.nabi - keyword.control.nabi
+//                                    ^^^ variable.other.member.nabi
+    make(type: Kind::Ident); Ev { match: 1 };
+//       ^^^^ variable.other.nabi
+//             ^^^^ entity.name.type.nabi
+//                 ^^ punctuation.separator.namespace.nabi
+//                   ^^^^^ entity.name.type.nabi
+//                                ^^^^^ variable.other.nabi
+    fn f(it: some Iterator<i32>, g: some (A + B)) -> some Display { let some = 1; some }
+//           ^^^^ storage.type.some.nabi
+//                                  ^^^^ storage.type.some.nabi
+//                                                   ^^^^ storage.type.some.nabi
+//                                                                      ^^^^ variable.other.nabi - storage.type.some.nabi
+//                                                                                ^^^^ variable.other.nabi - storage.type.some.nabi
+//                                                        ^^^^^^^ entity.name.type.nabi
+// tree-sitter: skip, `self` and `none` are not field names
+    let s = Point { self: 1, none: 2 };
+//                  ^^^^ variable.language.self.nabi
+//                           ^^^^ constant.language.none.nabi
+    union Bits { i: u32; f: f32; } let union = 2;
+//  ^^^^^ storage.type.nabi
+//                                     ^^^^^ variable.other.nabi
+    fn catch(e: str) { } fn in() { } mod type { }
+//     ^^^^^ entity.name.function.nabi - keyword.control.nabi
+//           ^ variable.parameter.nabi
+//                          ^^ entity.name.function.nabi
+//                                       ^^^^ entity.name.namespace.nabi
+    use pkg::util; sup::f(); std::fs; let nabi = 42; pkg.x;
+//      ^^^ keyword.other.path.nabi
+//           ^^^^ variable.other.nabi
+//                 ^^^ keyword.other.path.nabi
+//                           ^^^ entity.name.namespace.nabi
+//                                        ^^^^ variable.other.nabi
+//                                                   ^^^ variable.other.nabi
+    pub(pkg) fn a() { } pub(sub) fn b() { } let sub = 1;
+//  ^^^ storage.modifier.nabi
+//      ^^^ storage.modifier.visibility.nabi
+//                      ^^^ storage.modifier.nabi
+//                          ^^^ storage.modifier.visibility.nabi
+//                                              ^^^ variable.other.nabi
+    f() catch e: TimeoutError { } catch _ { }
+//      ^^^^^ keyword.control.nabi
+//            ^ variable.other.nabi
+//               ^^^^^^^^^^^^ entity.name.type.nabi
+//                                ^^^^^ keyword.control.nabi
+    fn make(type: i32, where: bool) -> i32 { type } make(type: 1, in: 2);
+//          ^^^^ variable.parameter.nabi - storage.type.nabi
+//                     ^^^^^ variable.parameter.nabi - keyword.other.nabi
+//                                           ^^^^ variable.other.nabi - storage.type.nabi
+//                                                       ^^^^ variable.other.nabi - storage.type.nabi
+//                                                                ^^ variable.other.nabi - keyword.control.nabi

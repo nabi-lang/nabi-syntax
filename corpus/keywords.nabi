@@ -1,0 +1,91 @@
+// SYNTAX TEST "source.nabi" "reserved keywords and literals"
+    if a { } else { } match x { } while c { } loop { } for x in xs { }
+//  ^^ keyword.control.nabi
+//           ^^^^ keyword.control.nabi
+//                    ^^^^^ keyword.control.nabi
+//                                ^^^^^ keyword.control.nabi
+//                                            ^^^^ keyword.control.nabi
+//                                                     ^^^ keyword.control.nabi
+//                                                           ^^ keyword.control.nabi
+    return; break; continue; try f(); throw e; yield v; await t;
+//  ^^^^^^ keyword.control.nabi
+//          ^^^^^ keyword.control.nabi
+//                 ^^^^^^^^ keyword.control.nabi
+//                           ^^^ keyword.control.nabi
+//                                    ^^^^^ keyword.control.nabi
+//                                             ^^^^^ keyword.control.nabi
+//                                                      ^^^^^ keyword.control.nabi
+    using f = open() { } let v = try parse(s) catch e { 0 } finally { };
+//  ^^^^^ keyword.control.nabi
+//                       ^^^ storage.type.nabi
+//                               ^^^ keyword.control.nabi
+//                                            ^^^^^ keyword.control.nabi
+//                                                          ^^^^^^^ keyword.control.nabi
+    type F = fn(i32); struct A { } enum B { } trait C { } impl C { } mod d;
+//           ^^ storage.type.nabi
+//                    ^^^^^^ storage.type.nabi
+//                                 ^^^^ storage.type.nabi
+//                                            ^^^^^ storage.type.nabi
+//                                                        ^^^^ storage.type.nabi
+//                                                                   ^^^ storage.type.nabi
+    pub unsafe async fn f(ref a: T) { } pub const A: i32 = 1; pub static B: i32 = 2; extern "C" { } static mut C: i32 = 1;
+//  ^^^ storage.modifier.nabi
+//      ^^^^^^ storage.modifier.nabi
+//             ^^^^^ storage.modifier.nabi
+//                        ^^^ storage.modifier.nabi
+//                                          ^^^^^ storage.modifier.nabi
+//                                                                ^^^^^^ storage.modifier.nabi
+//                                                                                   ^^^^^^ storage.modifier.nabi
+//                                                                                                         ^^^ storage.modifier.nabi
+    use a; x as i64; v is Foo; fn f() throws (E) -> T where T: Ord { } fn g(h: fn()) rethrows { }
+//  ^^^ keyword.other.nabi
+//           ^^ keyword.operator.word.nabi
+//                     ^^ keyword.operator.word.nabi
+//                                    ^^^^^^ keyword.other.nabi
+//                                                    ^^^^^ keyword.other.nabi
+//                                                                                   ^^^^^^^^ keyword.other.nabi
+    f(true, false, none, self); fn g(x: Self) -> any Error { }
+//    ^^^^ constant.language.boolean.nabi
+//          ^^^^^ constant.language.boolean.nabi
+//                 ^^^^ constant.language.none.nabi
+//                       ^^^^ variable.language.self.nabi
+//                                      ^^^^ variable.language.self.nabi
+//                                               ^^^ storage.type.any.nabi
+//                                                   ^^^^^ entity.name.type.nabi
+    iffy + letter + format + selfish + _; try!(x); try?(y);
+//  ^^^^ variable.other.nabi - keyword.control.nabi
+//         ^^^^^^ variable.other.nabi
+//                  ^^^^^^ variable.other.nabi
+//                           ^^^^^^^ variable.other.nabi
+//                                     ^ variable.other.nabi
+//                                        ^^^ keyword.control.nabi - entity.name.function.macro.nabi
+//                                           ^ keyword.operator.logical.nabi
+//                                                 ^^^ keyword.control.nabi
+//                                                    ^ keyword.operator.optional.nabi
+    macro + defer + dyn + move + gen + do;
+//  ^^^^^ keyword.other.reserved.nabi - variable.other.nabi
+//          ^^^^^ keyword.other.reserved.nabi
+//                  ^^^ keyword.other.reserved.nabi
+//                        ^^^^ keyword.other.reserved.nabi
+//                               ^^^ keyword.other.reserved.nabi
+//                                     ^^ keyword.other.reserved.nabi
+    let m = s.move(gen: 1) + Step { move: 1, do: 2 }.dyn + r#defer; move!(x); gen(1);
+//            ^^^^ entity.name.function.call.nabi - keyword.other.reserved.nabi
+//                 ^^^ variable.other.nabi - keyword.other.reserved.nabi
+//                                  ^^^^ variable.other.nabi - keyword.other.reserved.nabi
+//                                           ^^ variable.other.nabi - keyword.other.reserved.nabi
+//                                                   ^^^ variable.other.member.nabi
+//                                                         ^^^^^^^ variable.other.nabi - keyword.other.reserved.nabi
+//                                                                  ^^^^ keyword.other.reserved.nabi - entity.name.function.macro.nabi
+//                                                                            ^^^ keyword.other.reserved.nabi - entity.name.function.call.nabi
+    using f = open(p); using r = R { x: 1 }; for ref x in xs { x = 0; }
+//  ^^^^^ keyword.control.nabi
+//                     ^^^^^ keyword.control.nabi
+//                               ^ entity.name.type.nabi
+//                                           ^^^ keyword.control.nabi
+//                                               ^^^ storage.modifier.nabi
+    fn g((a, b): (i32, i32), P { x, y }: P) { } xs.map(|(k, v)| k);
+//        ^ variable.other.nabi
+//                           ^ entity.name.type.nabi
+//                                  ^ variable.other.nabi
+//                                                       ^ variable.other.nabi

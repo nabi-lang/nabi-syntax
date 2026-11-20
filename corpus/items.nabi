@@ -1,0 +1,74 @@
+// SYNTAX TEST "source.nabi" "functions, parameters, generics, types, paths"
+    fn add<T: Add<Output = T>>(a: T, b: T) -> T { a + b }
+//  ^^ meta.function.nabi storage.type.function.nabi
+//     ^^^ meta.function.nabi entity.name.function.nabi
+//        ^ meta.generic.nabi punctuation.definition.generic.begin.nabi
+//         ^ meta.generic.nabi entity.name.type.nabi
+//            ^^^ meta.generic.nabi entity.name.type.nabi
+//                ^^^^^^ entity.name.type.nabi
+//                       ^ keyword.operator.assignment.nabi
+//                          ^^ meta.generic.nabi punctuation.definition.generic.end.nabi
+//                             ^ meta.parameters.nabi variable.parameter.nabi
+//                              ^ punctuation.separator.colon.nabi
+//                                   ^ variable.parameter.nabi
+//                                         ^^ keyword.operator.arrow.nabi
+//                                                ^ variable.other.nabi - variable.parameter.nabi
+    pub fn read(self, path: str, buf: List<u8>) throws (IoError) -> usize;
+//         ^^^^ entity.name.function.nabi
+//              ^^^^ variable.language.self.nabi - variable.parameter.nabi
+//                    ^^^^ variable.parameter.nabi
+//                          ^^^ support.type.primitive.nabi
+//                                    ^^^^ entity.name.type.nabi
+//                                         ^^ support.type.primitive.nabi
+//                                              ^^^^^^ keyword.other.nabi
+//                                                      ^^^^^^^ entity.name.type.nabi - variable.parameter.nabi
+//                                                                  ^^^^^ support.type.primitive.nabi
+    fn f(cb: fn(i32) -> i32, t: (i32, [u8; 4])) { }
+//       ^^ variable.parameter.nabi
+//           ^^ storage.type.nabi
+//                           ^ variable.parameter.nabi
+//                                         ^ constant.numeric.decimal.nabi
+    impl<T> Iterator for Stack<T> where T: Clone { }
+//  ^^^^ storage.type.nabi
+//      ^ meta.generic.nabi punctuation.definition.generic.begin.nabi
+//          ^^^^^^^^ entity.name.type.nabi
+//                   ^^^ keyword.control.nabi
+//                       ^^^^^ meta.generic.nabi entity.name.type.nabi
+//                                ^^^^^ keyword.other.nabi
+//                                         ^^^^^ entity.name.type.nabi
+    let v: Dict<str, List<i32 | none>> = Dict::new(); a < b; A < B;
+//         ^^^^ entity.name.type.nabi
+//             ^ punctuation.definition.generic.begin.nabi
+//              ^^^ support.type.primitive.nabi
+//                            ^ keyword.operator.bitwise.nabi
+//                              ^^^^ constant.language.none.nabi
+//                                  ^^ punctuation.definition.generic.end.nabi
+//                                       ^^^^ entity.name.type.nabi
+//                                             ^^^ entity.name.function.call.nabi
+//                                                      ^ keyword.operator.comparison.nabi
+//                                                             ^ keyword.operator.comparison.nabi - punctuation.definition.generic.begin.nabi
+    type P = (i8, i16, i32, i64, i128, isize, u8, u16, u32, u64, u128, usize, f32, f64, bool, char, str, int, float, c_char);
+//            ^^ support.type.primitive.nabi
+//                               ^^^^ support.type.primitive.nabi
+//                                                                     ^^^^^ support.type.primitive.nabi
+//                                                                                      ^^^^ support.type.primitive.nabi
+//                                                                                            ^^^^ support.type.primitive.nabi
+//                                                                                                            ^^^^^ support.type.primitive.nabi
+//                                                                                                                   ^^^^^^ support.type.primitive.nabi
+    type H = (f16, bf16); let h = 0.5f16 + 2bf16;
+//            ^^^ support.type.primitive.nabi
+//                 ^^^^ support.type.primitive.nabi
+    Option::Some(x); foo::bar::Baz::qux(); MAX_LEN;
+//  ^^^^^^ entity.name.type.nabi
+//          ^^^^ entity.name.type.nabi
+//                   ^^^ entity.name.namespace.nabi
+//                        ^^^ entity.name.namespace.nabi
+//                             ^^^ entity.name.type.nabi
+//                                  ^^^ entity.name.function.call.nabi
+//                                         ^^^^^^^ entity.name.type.nabi
+    mod geom { } extern "C" { fn puts(s: Ptr<c_char>) -> i32; }
+//  ^^^ storage.type.nabi
+//      ^^^^ entity.name.namespace.nabi
+//               ^^^^^^ storage.modifier.nabi
+//                      ^^^ string.quoted.double.nabi
+//                               ^^^^ entity.name.function.nabi

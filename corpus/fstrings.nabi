@@ -1,0 +1,59 @@
+// SYNTAX TEST "source.nabi" "f-strings: holes, specs, nesting, reused quotes"
+    f"x = {x}, {{literal}} {a + b}";
+//  ^ string.interpolated.nabi storage.type.string.nabi
+//   ^ string.interpolated.nabi punctuation.definition.string.begin.nabi
+//    ^^^ string.interpolated.nabi
+//        ^ meta.interpolation.nabi punctuation.section.interpolation.begin.nabi
+//         ^ meta.interpolation.nabi variable.other.nabi
+//          ^ meta.interpolation.nabi punctuation.section.interpolation.end.nabi
+//             ^^ string.interpolated.nabi constant.character.escape.nabi
+//               ^^^^^^^ string.interpolated.nabi - meta.interpolation.nabi
+//                      ^^ constant.character.escape.nabi
+//                          ^ meta.interpolation.nabi variable.other.nabi
+//                            ^ meta.interpolation.nabi keyword.operator.arithmetic.nabi
+//                                ^ string.interpolated.nabi punctuation.definition.string.end.nabi
+    f"{s.split(" ")} {d["k"]}";
+//     ^ meta.interpolation.nabi variable.other.nabi
+//       ^^^^^ meta.interpolation.nabi entity.name.function.call.nabi
+//             ^^^ meta.interpolation.nabi string.quoted.double.nabi
+//                      ^^^ meta.interpolation.nabi string.quoted.double.nabi
+//                          ^^ string.interpolated.nabi
+    f"{x:.2f} {n:0>5d} {v:?} {x:>{w}} {x:>${w}.${p}f} {a::b}";
+//      ^^^^ meta.interpolation.nabi constant.other.format-spec.nabi
+//              ^^^^^ constant.other.format-spec.nabi
+//                       ^^ constant.other.format-spec.nabi
+//                             ^^ constant.other.format-spec.nabi
+//                               ^ constant.other.format-spec.nabi punctuation.section.interpolation.begin.nabi
+//                                ^ constant.other.format-spec.nabi meta.interpolation.nabi variable.other.nabi
+//                                 ^ constant.other.format-spec.nabi punctuation.section.interpolation.end.nabi
+//                                  ^ meta.interpolation.nabi punctuation.section.interpolation.end.nabi - constant.other.format-spec.nabi
+//                                        ^^ constant.other.format-spec.nabi punctuation.section.interpolation.begin.nabi
+//                                          ^ meta.interpolation.nabi variable.other.nabi
+//                                            ^ constant.other.format-spec.nabi - punctuation.accessor.nabi
+//                                                 ^ constant.other.format-spec.nabi
+//                                                     ^ meta.interpolation.nabi entity.name.namespace.nabi
+//                                                      ^^ meta.interpolation.nabi punctuation.separator.namespace.nabi - constant.other.format-spec.nabi
+//                                                        ^ meta.interpolation.nabi variable.other.nabi
+    f"{f"{x:>{w}}"} {(a, b):?} {if a { 1 } else { 2 }}";
+//    ^ meta.interpolation.nabi punctuation.section.interpolation.begin.nabi
+//     ^ meta.interpolation.nabi string.interpolated.nabi storage.type.string.nabi
+//        ^ meta.interpolation.nabi meta.interpolation.nabi variable.other.nabi
+//                     ^ meta.interpolation.nabi punctuation.separator.comma.nabi
+//                         ^^ constant.other.format-spec.nabi
+//                              ^^ meta.interpolation.nabi keyword.control.nabi
+//                                     ^ meta.interpolation.nabi constant.numeric.decimal.nabi
+//                                         ^^^^ meta.interpolation.nabi keyword.control.nabi
+    f"""
+    name: "{name}"
+//  ^^^^^^^ string.interpolated.triple.nabi - meta.interpolation.nabi
+//          ^^^^ string.interpolated.triple.nabi meta.interpolation.nabi variable.other.nabi
+    total: {items
+        .len()}
+//       ^^^ meta.interpolation.nabi entity.name.function.call.nabi
+    """ + 1;
+//  ^^^ string.interpolated.triple.nabi punctuation.definition.string.end.nabi
+//        ^ constant.numeric.decimal.nabi
+    f"" + if"x" { 1 } else { 2 };
+//  ^^^ string.interpolated.nabi
+//        ^^ keyword.control.nabi
+//          ^^^ string.quoted.double.nabi

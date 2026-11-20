@@ -1,0 +1,32 @@
+// Tokenize and highlight a large Nabi source.
+
+use pkg::{highlight_nabi, tokens};
+use core::bench::Bench;
+use core::hint::black_box;
+
+// ~1500 functions of mixed tokens (keywords, types, strings, f-strings,
+// comments, attributes).
+fn bench_src() -> str {
+    let b = StrBuf::new();
+    let i = 0i64;
+    while i < 1500i64 {
+        b.push_str(f"fn func_{i}(a: i32, b: str) -> i32 {{ let x = {i}; // comment\n");
+        b.push_str("    let s = f\"{a:>{x}}\"; Foo::bar('c', \"text\"); x + 1 }\n");
+        i += 1i64;
+    }
+    b.to_str()
+}
+
+#[bench]
+fn highlight(b: Bench) {
+    let s = bench_src();
+    b.set_bytes(s.len() as i64);
+    b.iter(|| highlight_nabi(black_box(s)));
+}
+
+#[bench]
+fn tokenize(b: Bench) {
+    let s = bench_src();
+    b.set_bytes(s.len() as i64);
+    b.iter(|| tokens(black_box(s)));
+}

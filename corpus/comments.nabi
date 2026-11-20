@@ -1,0 +1,31 @@
+// SYNTAX TEST "source.nabi" "comments: line, block (nested), doc"
+    let x = 1; // trailing
+//             ^^ comment.line.double-slash.nabi punctuation.definition.comment.nabi
+//               ^^^^^^^^^ comment.line.double-slash.nabi
+/// outer doc
+// <--- comment.line.documentation.nabi punctuation.definition.comment.nabi
+// ^^^^^^^^^^ comment.line.documentation.nabi
+//! inner doc
+// <--- comment.line.documentation.nabi
+//// four slashes are an ordinary comment
+// <---- comment.line.double-slash.nabi - comment.line.documentation.nabi
+    /* a /* nested */ still comment */ x;
+//  ^^ comment.block.nabi punctuation.definition.comment.nabi
+//       ^^^^^^^^^^^^ comment.block.nabi comment.block.nabi
+//                    ^^^^^^^^^^^^^ comment.block.nabi
+//                                  ^^ comment.block.nabi punctuation.definition.comment.nabi
+//                                     ^ variable.other.nabi - comment.block.nabi
+    /** outer block doc */
+//  ^^^^^^^^^^^^^^^^^^^^^^ comment.block.documentation.nabi
+    /*! inner block doc */
+//  ^^^^^^^^^^^^^^^^^^^^^^ comment.block.documentation.nabi
+    /**/ /*** stars */ x;
+//  ^^^^ comment.block.nabi - comment.block.documentation.nabi
+//       ^^^^^^^^^^^^^ comment.block.nabi - comment.block.documentation.nabi
+//                     ^ variable.other.nabi
+    /* spans
+       lines with "no string" and fn */ let y = 1;
+//     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.block.nabi
+//                                      ^^^ storage.type.nabi
+    "// not a comment";
+//   ^^^^^^^^^^^^^^^^ string.quoted.double.nabi - comment.line.double-slash.nabi

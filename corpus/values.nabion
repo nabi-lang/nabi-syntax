@@ -1,0 +1,33 @@
+// SYNTAX TEST "source.nabion" "NABION values"
+Config {
+    retries: 3, ratio: -0.75, big: 1_000_000, mask: 0xff, bits: 0b1010, perm: 0o17, e: 2E10,
+//           ^ constant.numeric.decimal.nabion
+//                     ^ keyword.operator.arithmetic.nabion
+//                      ^^^^ constant.numeric.float.nabion
+//                                 ^^^^^^^^^ constant.numeric.decimal.nabion
+//                                                  ^^^^ constant.numeric.hex.nabion
+//                                                              ^^^^^^ constant.numeric.binary.nabion
+//                                                                            ^^^^ constant.numeric.octal.nabion
+//                                                                                     ^^^^ constant.numeric.float.nabion
+    ok: true, off: false, c: 'a', nl: '\n', raw: r#"C:\x"#, s: "a\tb",
+//      ^^^^ constant.language.boolean.nabion
+//                 ^^^^^ constant.language.boolean.nabion
+//                           ^^^ string.quoted.single.char.nabion
+//                                     ^^ string.quoted.single.char.nabion constant.character.escape.nabion
+//                                               ^^^^^^^^^ string.quoted.double.raw.nabion
+//                                                               ^^ constant.character.escape.nabion
+    tags: ["a", "b"], pair: (1, 2), at: geom::Point { x: 1, y: 2 },
+//        ^ punctuation.brackets.square.nabion
+//                          ^ punctuation.brackets.round.nabion
+//                                      ^^^^ entity.name.namespace.nabion
+//                                          ^^ punctuation.separator.namespace.nabion
+//                                            ^^^^^ entity.name.type.nabion
+//                                                    ^ support.type.property-name.nabion
+    mode: Mode::Fast, shape: Shape::Circle(1.0, at: p), i32: 1,
+//        ^^^^ entity.name.type.nabion
+//              ^^^^ entity.name.type.nabion
+//                                  ^^^^^^ entity.name.type.nabion
+//                                         ^^^ constant.numeric.float.nabion
+//                                              ^^ support.type.property-name.nabion
+//                                                      ^^^ support.type.property-name.nabion
+}

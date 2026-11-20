@@ -1,0 +1,17 @@
+{
+  "name": "tree-sitter-nabion",
+  "version": "0.1.0",
+  "description": "NABION grammar for tree-sitter",
+  "repository": "https://github.com/nabi-lang/nabi-syntax",
+  "license": "MIT OR Apache-2.0",
+  "keywords": ["incremental", "parsing", "tree-sitter", "nabi", "nabion"],
+  "files": ["grammar.js", "tree-sitter.json", "queries/*", "src/**"],
+  "devDependencies": {
+    "tree-sitter-cli": "^0.27.1"
+  },
+  "scripts": {
+    "generate": "tree-sitter generate",
+    "test": "tree-sitter test --config-path test/config.json",
+    "parse": "tree-sitter parse"
+  }
+}

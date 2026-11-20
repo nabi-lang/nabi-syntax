@@ -1,0 +1,316 @@
+use pkg::{highlight_nabi, highlight_nabion, tokens, tokens_nabion, Kind, Token};
+use std::fs;
+use std::nabion;
+
+fn expect(ok: bool, what: str) {
+    if !ok { panic(f"check failed: {what}"); }
+}
+
+fn s(t: str) -> str { f"<span class=\"s\">{t}</span>" }
+
+#[test]
+fn highlights_nabi() {
+    let h = highlight_nabi("let x: i32 = 1; // c\n#[test] Foo::bar('a', \"<\")");
+    expect(h == "<span class=\"k\">let</span> x: <span class=\"t\">i32</span> = <span class=\"n\">1</span>; <span class=\"c\">// c</span>\n<span class=\"a\">#[test]</span> <span class=\"t\">Foo</span>::bar(<span class=\"s\">'a'</span>, <span class=\"s\">\"&lt;\"</span>)", h);
+}
+
+#[test]
+fn fstring_holes() {
+    let same = s("f\"{") + "s.split(" + s("\" \"") + ")" + s("}\"");
+    expect(highlight_nabi("f\"{s.split(\" \")}\"") == same, "same quote");
+    let nested = s("f\"{") + s("f\"{") + "x" + s(":&gt;{") + "w" + s("}") + s("}\"") + s("} {{y}}\"");
+    expect(highlight_nabi("f\"{f\"{x:>{w}}\"} {{y}}\"") == nested, "nested");
+}
+
+#[test]
+fn nabion_keywords() {
+    let h = highlight_nabion("Package { type: \"x\", ok: true }");
+    expect(h == "<span class=\"t\">Package</span> { type: <span class=\"s\">\"x\"</span>, ok: <span class=\"k\">true</span> }", h);
+}
+
+#[test]
+fn tokens_round_trip() {
+    let src = "fn f(a: str) -> str { f\"{a:>{w}}\" } /* x */ 'ab";
+    let ts = tokens(src);
+    let back = StrBuf::new();
+    for t in ts { back.push_str(t.text); }
+    expect(back.to_str() == src, "concat");
+    expect(ts[0].kind == Kind::Keyword && ts[0].text == "fn", "first");
+    expect(ts[1].kind == Kind::Text && ts[1].text == " f(a: ", "merged text");
+}
+
+fn k(t: str) -> str { f"<span class=\"k\">{t}</span>" }
+
+#[test]
+fn string_prefixes() {
+    // `date"..."` is one string; a keyword or `rb` before `"` is not a prefix.
+    let h = highlight_nabi("date\"2024-01-15\" + rgb \"f\" + rb\"x\"");
+    let want = s("date\"2024-01-15\"") + " + rgb " + s("\"f\"") + " + rb" + s("\"x\"");
+    expect(h == want, h);
+    let g = highlight_nabi("if\"a\" {}");
+    expect(g == k("if") + s("\"a\"") + " {}", g);
+}
+
+#[test]
+fn half_floats() {
+    let h = highlight_nabi("let h: f16 = 0.5bf16;");
+    let want = k("let") + " h: <span class=\"t\">f16</span> = <span class=\"n\">0.5bf16</span>;";
+    expect(h == want, h);
+}
+
+fn m(t: str) -> str { f"<span class=\"m\">{t}</span>" }
+
+#[test]
+fn raw_identifiers() {
+    // r#name is a name even when spelled as a keyword, reserved ones too.
+    let h = highlight_nabi("fn r#match(r#gen: i32) { let r#move = r#type + do; }");
+    let want = k("fn") + " r#match(r#gen: <span class=\"t\">i32</span>) { " + k("let")
+        + " r#move = r#type + " + k("do") + "; }";
+    expect(h == want, h);
+    let ts = tokens("r#match");
+    expect(ts.len() == 1 && ts[0].kind == Kind::Text && ts[0].text == "r#match", "one name");
+}
+
+#[test]
+fn raw_strings() {
+    let h = highlight_nabi("r#\"a\"b\"# + r##\"c\"#d\"## + r\"\\q\" + b\"x\" + c'\\xFF'");
+    let want = s("r#\"a\"b\"#") + " + " + s("r##\"c\"#d\"##") + " + " + s("r\"\\q\"") + " + "
+        + s("b\"x\"") + " + " + s("c'\\xFF'");
+    expect(h == want, h);
+}
+
+#[test]
+fn qualified_meta_names() {
+    let h = highlight_nabi("#[dep::attr] #[derive(dep::Name)]\nuse dep::log!; dep::log!(1);");
+    let want = "<span class=\"a\">#[dep::attr]</span> <span class=\"a\">#[derive(dep::Name)]</span>\n"
+        + k("use") + " dep::" + m("log!") + "; dep::" + m("log!") + "(<span class=\"n\">1</span>);";
+    expect(h == want, h);
+    let d = highlight_nabi("#[deprecated(since = \"0.1.6\", note = \"use g\")]");
+    expect(d == "<span class=\"a\">#[deprecated(since = \"0.1.6\", note = \"use g\")]</span>", d);
+}
+
+#[test]
+fn macros_and_templates() {
+    let h = highlight_nabi("#[impl_macro(sq)] pub @macro { (@x: expr) => { @x * @x } } sq!(2) != try!(f())");
+    let want = "<span class=\"a\">#[impl_macro(sq)]</span> " + k("pub") + " " + m("@macro") + " { ("
+        + m("@x") + ": expr) =&gt; { " + m("@x") + " * " + m("@x") + " } } " + m("sq!")
+        + "(<span class=\"n\">2</span>) != " + k("try") + "!(f())";
+    expect(h == want, h);
+}
+
+#[test]
+fn labeled_return() {
+    let h = highlight_nabi("each(xs) |x| { return@each; } return @x;");
+    let want = "each(xs) |x| { " + k("return") + "@each; } " + k("return") + " " + m("@x") + ";";
+    expect(h == want, h);
+}
+
+#[test]
+fn shebang() {
+    let h = highlight_nabi("#!/usr/bin/env nabi\nlet x = 1;");
+    expect(h.starts_with("<span class=\"c\">#!/usr/bin/env nabi</span>\n"), h);
+    let a = highlight_nabi("#![allow(unused)]");
+    expect(a == "<span class=\"a\">#![allow(unused)]</span>", a);
+}
+
+// The shared corpus (corpus/*.nabi, corpus/*.nabion): each `// ^ scope`
+// assertion whose scopes map to a Kind through grammars/classes.nabion
+// must hold for the library's tokens too.
+
+struct Class {
+    prefix: str;
+    kind: str;
+}
+
+struct Check {
+    line: usize;
+    at: usize;
+    cols: List<usize>;
+    scopes: List<str>;
+}
+
+fn chars_of(s: str) -> List<char> {
+    let cs: List<char> = List::new();
+    for c in s.chars() { cs.push(c); }
+    cs
+}
+
+fn str_of(cs: List<char>, a: usize, b: usize) -> str {
+    let s = StrBuf::new();
+    for k in a..b { s.push(cs[k]); }
+    s.to_str()
+}
+
+fn read(path: str) -> str {
+    try fs::read_to_str(path) catch e { panic(f"{path}: {e}"); }
+}
+
+fn classes() -> List<Class> {
+    let out: List<Class> = List::new();
+    let v = try nabion::parse(read("grammars/classes.nabion")) catch e { panic(f"classes.nabion: {e}"); };
+    match v {
+        nabion::Value::List(rows) => {
+            for r in rows {
+                match r {
+                    nabion::Value::Tuple(p) => {
+                        match (p[0], p[1]) {
+                            (nabion::Value::Str(a), nabion::Value::Str(b)) => out.push(Class { prefix: a, kind: b }),
+                            _ => panic("classes.nabion: rows are (scope, kind, capture, lsp)"),
+                        }
+                    }
+                    _ => panic("classes.nabion: rows are tuples"),
+                }
+            }
+        }
+        _ => panic("classes.nabion: a list of tuples"),
+    }
+    out
+}
+
+/// The Kind name of a TextMate scope: its longest prefix's row, "" if
+/// none or no Kind.
+fn kind_of(cls: List<Class>, scope: str) -> str {
+    let s = scope;
+    if s.ends_with(".nabion") {
+        let cs = chars_of(s);
+        s = str_of(cs, 0, cs.len() - 6);
+    } else if s.ends_with(".nabi") {
+        let cs = chars_of(s);
+        s = str_of(cs, 0, cs.len() - 4);
+    }
+    let best = "";
+    let best_len = 0usize;
+    for c in cls {
+        let n = c.prefix.len();
+        if (s == c.prefix || s.starts_with(c.prefix + ".")) && n > best_len {
+            best = c.kind;
+            best_len = n;
+        }
+    }
+    best
+}
+
+/// The Kind an assertion's scopes expect: Attribute if any scope is in
+/// an attribute (the library keeps one token for it), else the last
+/// scope with a Kind; "" if none has one.
+fn expected(cls: List<Class>, scopes: List<str>) -> str {
+    let want = "";
+    for s in scopes {
+        let k = kind_of(cls, s);
+        if k == "Attribute" { return k; }
+        if !k.is_empty() { want = k; }
+    }
+    want
+}
+
+/// An assertion line `// ^^ scope..` / `// <~~-- scope..`, else none.
+fn assertion(l: List<char>, line: usize, at: usize) -> Check | none {
+    let n = l.len();
+    let j = 0usize;
+    while j < n && l[j] == ' ' { j += 1; }
+    if j + 1 >= n || l[j] != '/' || l[j + 1] != '/' { return none; }
+    j += 2;
+    while j < n && l[j] == ' ' { j += 1; }
+    let cols: List<usize> = List::new();
+    if j < n && l[j] == '^' {
+        while j < n && (l[j] == '^' || l[j] == ' ') {
+            if l[j] == '^' { cols.push(j); }
+            j += 1;
+        }
+    } else if j < n && l[j] == '<' {
+        j += 1;
+        let off = 0usize;
+        while j < n && l[j] == '~' {
+            off += 1;
+            j += 1;
+        }
+        let c = off;
+        while j < n && l[j] == '-' {
+            cols.push(c);
+            c += 1;
+            j += 1;
+        }
+        if cols.is_empty() { return none; }
+    } else {
+        return none;
+    }
+    let scopes: List<str> = List::new();
+    for w in str_of(l, j, n).split_whitespace() {
+        if w == "-" { break; }
+        scopes.push(w);
+    }
+    Check { line: line, at: at, cols: cols, scopes: scopes }
+}
+
+/// Per line, the Kind of each UTF-16 column (the unit the assertion
+/// columns count in).
+fn kinds_by_line(toks: List<Token>) -> List<List<Kind>> {
+    let lines: List<List<Kind>> = List::new();
+    let cur: List<Kind> = List::new();
+    for t in toks {
+        for c in t.text.chars() {
+            if c == '\n' {
+                lines.push(cur);
+                cur = List::new();
+            } else {
+                cur.push(t.kind);
+                if c as u32 > 0xFFFFu32 { cur.push(t.kind); }
+            }
+        }
+    }
+    lines.push(cur);
+    lines
+}
+
+/// Checks one corpus file; returns its assertion count and failures.
+fn check_file(cls: List<Class>, name: str, fails: List<str>) -> usize {
+    let text = read(f"corpus/{name}");
+    let lines: List<List<char>> = List::new();
+    for l in text.split("\n") { lines.push(chars_of(l)); }
+    let head = str_of(lines[0], 0, lines[0].len());
+    if !head.contains("SYNTAX TEST") { panic(f"corpus/{name}: no SYNTAX TEST header"); }
+    let toks = if head.contains("\"source.nabion\"") { tokens_nabion(text) } else { tokens(text) };
+    let kinds = kinds_by_line(toks);
+    let src = 0usize;
+    let count = 0usize;
+    for i in 1..lines.len() {
+        let chk = match assertion(lines[i], src, i + 1) {
+            c: Check => c,
+            none => {
+                src = i;
+                continue;
+            }
+        };
+        let want = expected(cls, chk.scopes);
+        if want.is_empty() { continue; }
+        count += 1;
+        for col in chk.cols {
+            let have = if col < kinds[chk.line].len() { f"{kinds[chk.line][col]:?}" } else { "end of line" };
+            if have != want {
+                fails.push(f"corpus/{name}:{chk.at}: col {col}: want {want}, have {have}");
+            }
+        }
+    }
+    count
+}
+
+#[test]
+fn corpus() {
+    let cls = classes();
+    let names: List<str> = List::new();
+    let rd = try fs::read_dir("corpus") catch e { panic(f"corpus: {e}"); };
+    try for d in rd {
+        let f = d.file_name();
+        if f.ends_with(".nabi") || f.ends_with(".nabion") { names.push(f); }
+    } catch x { panic(f"corpus: {x}"); };
+    names.sort();
+    let fails: List<str> = List::new();
+    let total = 0usize;
+    for f in names { total += check_file(cls, f, fails); }
+    println(f"corpus: {names.len()} files, {total} assertions with a Kind, {fails.len()} failures");
+    if !fails.is_empty() {
+        let msg = StrBuf::new();
+        for f in fails { msg.push_str(f"\n{f}"); }
+        panic(msg.to_str());
+    }
+}

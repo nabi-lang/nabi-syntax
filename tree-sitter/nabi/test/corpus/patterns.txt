@@ -1,0 +1,116 @@
+==================
+Slice patterns
+==================
+
+match xs {
+    [] => 0,
+    [x] => x,
+    [first, ..rest] => first,
+    [.., last] => last,
+    [[0, n], ..] => n,
+    whole @ [5, _] => 1,
+    [_, n @ 2] => n,
+}
+
+---
+
+(source_file
+  (expression_statement
+    (match_expression
+      (identifier)
+      (match_block
+        (match_arm
+          (match_pattern
+            (slice_pattern))
+          (integer_literal))
+        (match_arm
+          (match_pattern
+            (slice_pattern
+              (identifier)))
+          (identifier))
+        (match_arm
+          (match_pattern
+            (slice_pattern
+              (identifier)
+              (rest_pattern
+                (identifier))))
+          (identifier))
+        (match_arm
+          (match_pattern
+            (slice_pattern
+              (remaining_field_pattern)
+              (identifier)))
+          (identifier))
+        (match_arm
+          (match_pattern
+            (slice_pattern
+              (slice_pattern
+                (integer_literal)
+                (identifier))
+              (remaining_field_pattern)))
+          (identifier))
+        (match_arm
+          (match_pattern
+            (captured_pattern
+              (identifier)
+              (slice_pattern
+                (integer_literal)
+                (wildcard_pattern))))
+          (integer_literal))
+        (match_arm
+          (match_pattern
+            (slice_pattern
+              (wildcard_pattern)
+              (captured_pattern
+                (identifier)
+                (integer_literal))))
+          (identifier))))))
+
+==================
+Slice patterns in let and if let
+==================
+
+let [a, b, c, _] = arr;
+let [p, ..mid, q] = arr;
+let [q, ..tail] = xs else { return; };
+let fs = if let [first, ..] = xs { first } else { 0 };
+
+---
+
+(source_file
+  (let_declaration
+    (slice_pattern
+      (identifier)
+      (identifier)
+      (identifier)
+      (wildcard_pattern))
+    (identifier))
+  (let_declaration
+    (slice_pattern
+      (identifier)
+      (rest_pattern
+        (identifier))
+      (identifier))
+    (identifier))
+  (let_declaration
+    (slice_pattern
+      (identifier)
+      (rest_pattern
+        (identifier)))
+    (identifier)
+    (block
+      (expression_statement
+        (return_expression))))
+  (let_declaration
+    (identifier)
+    (if_expression
+      (let_condition
+        (slice_pattern
+          (identifier)
+          (remaining_field_pattern))
+        (identifier))
+      (block
+        (identifier))
+      (else_clause
+        (block
+          (integer_literal))))))

@@ -1,0 +1,21 @@
+// SYNTAX TEST "source.nabion" "a package manifest"
+Package {
+// <------- entity.name.type.nabion
+//      ^ punctuation.brackets.curly.nabion
+    name: "nabi-syntax",
+//  ^^^^ support.type.property-name.nabion
+//      ^ punctuation.separator.colon.nabion
+//        ^^^^^^^^^^^^^ string.quoted.double.nabion
+//                     ^ punctuation.separator.comma.nabion
+    type: "lib", // not a keyword in NABION
+//  ^^^^ support.type.property-name.nabion - storage.type.nabion
+//               ^^^^^^^^^^^^^^^^^^^^^^^^^ comment.line.double-slash.nabion
+    deps: { "json": "0.1", "http": { path: "../http" } },
+//  ^^^^ support.type.property-name.nabion
+//          ^^^^^^ string.quoted.double.nabion
+//                                   ^^^^ support.type.property-name.nabion
+    /* block /* nested */ */ edition: none,
+//  ^^^^^^^^^^^^^^^^^^^^^^^^ comment.block.nabion
+//                           ^^^^^^^ support.type.property-name.nabion
+//                                    ^^^^ constant.language.none.nabion
+}

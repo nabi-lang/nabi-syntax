@@ -1,0 +1,13 @@
+// SYNTAX TEST "source.nabi" "raw identifiers"
+    fn r#match(x: i32) -> i32 { x + 1 }
+//  ^^ storage.type.function.nabi
+//     ^^^^^^^ entity.name.function.nabi - keyword.control.nabi
+    struct Tok { r#type: i32; } let r#move = r#match(1); tok.r#type;
+//               ^^^^^^ variable.other.nabi - storage.type.nabi
+//                                  ^^^^^^ variable.other.nabi
+//                                           ^^^^^^^ entity.name.function.call.nabi - keyword.control.nabi
+//                                                           ^^^^^^ variable.other.member.nabi
+    r#gen + r#"raw"# + r#loop;
+//  ^^^^^ variable.other.nabi
+//          ^^^^^^^^ string.quoted.double.raw.nabi
+//                     ^^^^^^ variable.other.nabi - keyword.control.nabi

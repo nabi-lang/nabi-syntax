@@ -1,0 +1,67 @@
+// SYNTAX TEST "source.nabi" "integer and float literals, radixes, suffixes"
+    f(42, 1_000_000, 1230, 0);
+//    ^^ constant.numeric.decimal.nabi
+//        ^^^^^^^^^ constant.numeric.decimal.nabi
+//                   ^^^^ constant.numeric.decimal.nabi
+//                         ^ constant.numeric.decimal.nabi
+    f(0xFF, 0X1a, 0xFFFF_FFFF, 0b1010_0101, 0B11, 0o755, 0O17);
+//    ^^^^ constant.numeric.hex.nabi
+//          ^^^^ constant.numeric.hex.nabi
+//                ^^^^^^^^^^^ constant.numeric.hex.nabi
+//                             ^^^^^^^^^^^ constant.numeric.binary.nabi
+//                                          ^^^^ constant.numeric.binary.nabi
+//                                                ^^^^^ constant.numeric.octal.nabi
+//                                                       ^^^^ constant.numeric.octal.nabi
+    f(3.14, 1., 0.5, 1.5e10, 2e-3, 6.022E+23, 3.141_592);
+//    ^^^^ constant.numeric.float.nabi
+//          ^^ constant.numeric.float.nabi
+//              ^^^ constant.numeric.float.nabi
+//                   ^^^^^^ constant.numeric.float.nabi
+//                           ^^^^ constant.numeric.float.nabi
+//                                 ^^^^^^^^^ constant.numeric.float.nabi
+//                                            ^^^^^^^^^ constant.numeric.float.nabi
+    f(42i32, 3.14f64, 0xFFu8, 1f64, 2i, 5kg, 1_000_000i64, -128i8);
+//    ^^ constant.numeric.decimal.nabi - entity.name.type.numeric.nabi
+//      ^^^ constant.numeric.decimal.nabi entity.name.type.numeric.nabi
+//               ^^^ constant.numeric.float.nabi entity.name.type.numeric.nabi
+//                    ^^^^ constant.numeric.hex.nabi
+//                        ^^ entity.name.type.numeric.nabi
+//                            ^ constant.numeric.decimal.nabi
+//                             ^^^ entity.name.type.numeric.nabi
+//                                  ^ constant.numeric.decimal.nabi
+//                                   ^ entity.name.type.numeric.nabi
+//                                      ^ constant.numeric.decimal.nabi
+//                                       ^^ entity.name.type.numeric.nabi
+//                                                         ^ keyword.operator.arithmetic.nabi
+//                                                          ^^^^^ constant.numeric.decimal.nabi
+    f(1..2, 1..=9, 1.foo, t.0, 1.+2, 2e10, 1e, x2);
+//    ^ constant.numeric.decimal.nabi
+//     ^^ keyword.operator.range.nabi
+//       ^ constant.numeric.decimal.nabi
+//          ^ constant.numeric.decimal.nabi
+//           ^^^ keyword.operator.range.nabi
+//                 ^ constant.numeric.decimal.nabi - constant.numeric.float.nabi
+//                  ^ punctuation.accessor.nabi
+//                   ^^^ variable.other.member.nabi
+//                        ^ variable.other.nabi
+//                          ^ constant.numeric.decimal.nabi
+//                             ^^ constant.numeric.float.nabi
+//                               ^ keyword.operator.arithmetic.nabi
+//                                   ^^^^ constant.numeric.float.nabi
+//                                         ^ constant.numeric.decimal.nabi
+//                                          ^ entity.name.type.numeric.nabi
+//                                             ^^ variable.other.nabi
+    f(9.81m, 3km, 2.5e3kg);
+//    ^^^^ constant.numeric.float.nabi - entity.name.type.numeric.nabi
+//        ^ constant.numeric.float.nabi entity.name.type.numeric.nabi
+//           ^ constant.numeric.decimal.nabi
+//            ^^ entity.name.type.numeric.nabi
+//                     ^^ entity.name.type.numeric.nabi
+    f(0.5f16, 2bf16, 1e3bf16, 9.81m², 1μm, 1.0ε);
+//    ^^^ constant.numeric.float.nabi - entity.name.type.numeric.nabi
+//       ^^^ constant.numeric.float.nabi entity.name.type.numeric.nabi
+//             ^^^^ entity.name.type.numeric.nabi
+//                      ^^^^ constant.numeric.float.nabi entity.name.type.numeric.nabi
+//                                ^^ constant.numeric.float.nabi entity.name.type.numeric.nabi
+//                                     ^^ entity.name.type.numeric.nabi
+//                                            ^ constant.numeric.float.nabi entity.name.type.numeric.nabi
