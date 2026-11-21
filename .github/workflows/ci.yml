@@ -15,7 +15,7 @@ permissions:
 jobs:
   dco:
     name: DCO
-    uses: nabi-lang/.github/.github/workflows/reusable-dco.yml@v1.0.0
+    uses: nabi-lang/.github/.github/workflows/reusable-dco.yml@v1.0.2
 
   textmate:
     name: Test TextMate grammars
@@ -68,7 +68,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Install Nabi from the nabi.nabion pin
-        uses: nabi-lang/.github/actions/install-nabi@v1.0.0
+        uses: nabi-lang/.github/actions/install-nabi@v1.0.2
         with:
           pin: nabi.nabion
       - name: Check format with nabi fmt
