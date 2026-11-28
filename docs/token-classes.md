@@ -51,8 +51,8 @@ A TextMate scope takes the row of its longest listed prefix, without the
 | primitive type | `i32` `str` `c_char` | `support.type.primitive` | `@type.builtin` | `type` | `Type` |
 | type | `Point` `MAX` `Kind::Ident` | `entity.name.type` | `@type` | `type` | `Type` |
 | generics | `<` `>` of `List<T>` | `punctuation.definition.generic` in `meta.generic` | `@punctuation.bracket` | | `Text` |
-| function name | `add` in `fn add` | `entity.name.function` | `@function` | `function` | `Text` |
-| call | `f` in `f(x)`, `x.len()` | `entity.name.function.call` | `@function.call` | `function` | `Text` |
+| function name | `add` in `fn add` | `entity.name.function` | `@function` | `function` | ``Function` |
+| call | `f` in `f(x)`, `x.len()` | `entity.name.function.call` | `@function.call` | `function` | ``Function` |
 | macro call | `log!` `dep::log!` | `entity.name.function.macro` | `@function.macro` | `macro` | `Macro` |
 | template token | `@macro` `@Self` `@field` `@x` | `keyword.other.template` (`@`: `punctuation.definition.template`) | `@function.macro` | `macro` | `Macro` |
 | attribute | `#[derive(Debug)]` `#![allow(x)]` | `meta.attribute` (name: `entity.name.function.attribute`) | `@attribute` | `decorator` | `Attribute` |
@@ -72,9 +72,9 @@ Captures refine the table's where tree-sitter knows more:
 them falls back to `@keyword`.
 
 `Kind` is coarser than the scopes: identifiers, operators, punctuation,
-labels and names are all `Text`, and an attribute is one `Attribute`
+labels and other names are all `Text`, and an attribute is one `Attribute`
 token, its arguments included. Its CSS classes are `k` `t` `s` `n` `c`
-`a` `m`; `Text` gets no span.
+`a` `m` `f`; `Text` gets no span.
 
 `nabils` adds semantic tokens only for what no static grammar can know:
 `macro` (macro calls), `decorator` (user-defined literal suffixes and

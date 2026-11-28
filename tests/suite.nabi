@@ -11,12 +11,12 @@ fn s(t: str) -> str { f"<span class=\"s\">{t}</span>" }
 #[test]
 fn highlights_nabi() {
     let h = highlight_nabi("let x: i32 = 1; // c\n#[test] Foo::bar('a', \"<\")");
-    expect(h == "<span class=\"k\">let</span> x: <span class=\"t\">i32</span> = <span class=\"n\">1</span>; <span class=\"c\">// c</span>\n<span class=\"a\">#[test]</span> <span class=\"t\">Foo</span>::bar(<span class=\"s\">'a'</span>, <span class=\"s\">\"&lt;\"</span>)", h);
+    expect(h == "<span class=\"k\">let</span> x: <span class=\"t\">i32</span> = <span class=\"n\">1</span>; <span class=\"c\">// c</span>\n<span class=\"a\">#[test]</span> <span class=\"t\">Foo</span>::<span class=\"f\">bar</span>(<span class=\"s\">'a'</span>, <span class=\"s\">\"&lt;\"</span>)", h);
 }
 
 #[test]
 fn fstring_holes() {
-    let same = s("f\"{") + "s.split(" + s("\" \"") + ")" + s("}\"");
+    let same = s("f\"{") + "s." + f("split") + "(" + s("\" \"") + ")" + s("}\"");
     expect(highlight_nabi("f\"{s.split(\" \")}\"") == same, "same quote");
     let nested = s("f\"{") + s("f\"{") + "x" + s(":&gt;{") + "w" + s("}") + s("}\"") + s("} {{y}}\"");
     expect(highlight_nabi("f\"{f\"{x:>{w}}\"} {{y}}\"") == nested, "nested");
@@ -36,7 +36,8 @@ fn tokens_round_trip() {
     for t in ts { back.push_str(t.text); }
     expect(back.to_str() == src, "concat");
     expect(ts[0].kind == Kind::Keyword && ts[0].text == "fn", "first");
-    expect(ts[1].kind == Kind::Text && ts[1].text == " f(a: ", "merged text");
+    expect(ts[2].kind == Kind::Function && ts[2].text == "f", "function name");
+    expect(ts[3].kind == Kind::Text && ts[3].text == "(a: ", "merged text");
 }
 
 fn k(t: str) -> str { f"<span class=\"k\">{t}</span>" }
@@ -60,11 +61,13 @@ fn half_floats() {
 
 fn m(t: str) -> str { f"<span class=\"m\">{t}</span>" }
 
+fn f(t: str) -> str { f"<span class=\"f\">{t}</span>" }
+
 #[test]
 fn raw_identifiers() {
     // r#name is a name even when spelled as a keyword, reserved ones too.
     let h = highlight_nabi("fn r#match(r#gen: i32) { let r#move = r#type + do; }");
-    let want = k("fn") + " r#match(r#gen: <span class=\"t\">i32</span>) { " + k("let")
+    let want = k("fn") + " " + f("r#match") + "(r#gen: <span class=\"t\">i32</span>) { " + k("let")
         + " r#move = r#type + " + k("do") + "; }";
     expect(h == want, h);
     let ts = tokens("r#match");
@@ -94,14 +97,24 @@ fn macros_and_templates() {
     let h = highlight_nabi("#[impl_macro(sq)] pub @macro { (@x: expr) => { @x * @x } } sq!(2) != try!(f())");
     let want = "<span class=\"a\">#[impl_macro(sq)]</span> " + k("pub") + " " + m("@macro") + " { ("
         + m("@x") + ": expr) =&gt; { " + m("@x") + " * " + m("@x") + " } } " + m("sq!")
-        + "(<span class=\"n\">2</span>) != " + k("try") + "!(f())";
+        + "(<span class=\"n\">2</span>) != " + k("try") + "!(" + f("f") + "())";
     expect(h == want, h);
 }
 
 #[test]
 fn labeled_return() {
     let h = highlight_nabi("each(xs) |x| { return@each; } return @x;");
-    let want = "each(xs) |x| { " + k("return") + "@each; } " + k("return") + " " + m("@x") + ";";
+    let want = f("each") + "(xs) |x| { " + k("return") + "@each; } " + k("return") + " " + m("@x") + ";";
+    expect(h == want, h);
+}
+
+#[test]
+fn functions() {
+    // Names declared with `fn` and names called, as the editors colour them.
+    let h = highlight_nabi("fn add(a: i32) { xs.map(sq); obj.len; Point(1); if (a) {} }");
+    let want = k("fn") + " " + f("add") + "(a: <span class=\"t\">i32</span>) { xs." + f("map")
+        + "(sq); obj.len; <span class=\"t\">Point</span>(<span class=\"n\">1</span>); " + k("if")
+        + " (a) {} }";
     expect(h == want, h);
 }
 
