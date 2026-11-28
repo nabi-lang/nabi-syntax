@@ -848,7 +848,7 @@ module.exports = grammar({
         field('operator', alias($._ext_operator, $.operator)),
         field('right', $._expression),
       )),
-      // `bag -> g`: between two values `->` spells `→`.
+      // `bag -> g`: `->` between two values, where a trait binds it.
       prec.left(PREC.additive, seq(
         field('left', $._expression),
         field('operator', alias('->', $.operator)),
