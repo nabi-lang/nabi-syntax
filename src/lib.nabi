@@ -1,6 +1,6 @@
 //! Tokenizer and HTML highlighter for Nabi and NABION: keywords, types,
 //! strings (f-string holes as code, nested; raw strings), chars, numbers,
-//! comments, attributes and macros. `r#name` is an identifier, never a
+//! comments, attributes, functions and macros. `r#name` is an identifier, never a
 //! keyword. The classes follow grammars/classes.nabion, the table the
 //! TextMate grammars in grammars/ are tested against.
 
@@ -17,11 +17,13 @@ pub enum Kind {
     Text,
     /// A macro call `name!` or a meta template token `@name`.
     Macro,
+    /// A function's name: `add` in `fn add`, `f` in `f(x)` and `x.f()`.
+    Function,
 }
 
 impl Kind {
     /// The CSS class `highlight_*` puts on the token's `<span>`: `k`,
-    /// `t`, `s`, `n`, `c`, `a`, `m`, or `""` for `Text` (not wrapped).
+    /// `t`, `s`, `n`, `c`, `a`, `m`, `f`, or `""` for `Text` (not wrapped).
     pub fn class(self) -> str {
         match self {
             Kind::Keyword => "k",
@@ -32,6 +34,7 @@ impl Kind {
             Kind::Attribute => "a",
             Kind::Text => "",
             Kind::Macro => "m",
+            Kind::Function => "f",
         }
     }
 }
@@ -461,6 +464,11 @@ impl Lexer {
             && !(j > 3 && is_ident(self.cs[j - 4]))
     }
 
+    /// Whether a name ending at `k` is called: `(` after it on the line.
+    fn call_ahead(self, k: usize) -> bool {
+        self.at(self.skip_space(k)) == '('
+    }
+
     /// Whether a single `:` follows `k`: a field or binding name.
     fn colon_ahead(self, k: usize) -> bool {
         let j = self.skip_space(k);
@@ -548,7 +556,15 @@ impl Lexer {
             self.emit(self.nabion_kind(word, k), i, k);
             return k;
         }
-        if self.after_dot(i) || self.after_word(i, "fn") || self.after_word(i, "mod") {
+        if self.after_word(i, "fn") {
+            self.emit(Kind::Function, i, k);
+            return k;
+        }
+        if self.after_dot(i) {
+            self.emit(if self.call_ahead(k) { Kind::Function } else { Kind::Text }, i, k);
+            return k;
+        }
+        if self.after_word(i, "mod") {
             self.emit(Kind::Text, i, k);
             return k;
         }
@@ -556,7 +572,8 @@ impl Lexer {
             self.emit(Kind::Macro, i, k + 1);
             return k + 1;
         }
-        self.emit(self.word_kind(word, i, k), i, k);
+        let kind = self.word_kind(word, i, k);
+        self.emit(if kind == Kind::Text && self.call_ahead(k) { Kind::Function } else { kind }, i, k);
         k
     }
 
@@ -636,7 +653,7 @@ impl Lexer {
                         self.emit(Kind::Macro, i, e + 1);
                         i = e + 1;
                     } else {
-                        self.emit(Kind::Text, i, e);
+                        self.emit(if self.call_ahead(e) { Kind::Function } else { Kind::Text }, i, e);
                         i = e;
                     }
                 } else if k == i + 1 && c == 'r' && (self.at(k) == '"' || self.at(k) == '#') {

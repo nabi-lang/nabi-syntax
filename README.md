@@ -154,12 +154,13 @@ for t in nabi_syntax::tokens("fn main() {}") {
 | `tokens_nabion(src: str) -> List<Token>` | Tokens of NABION source |
 | `to_html(toks: List<Token>) -> str` | Tokens to the same HTML as `highlight_*` |
 | `Token { kind: Kind, text: str }`   | A piece of the source |
-| `Kind`                              | `Keyword` `Type` `Str` `Number` `Comment` `Attribute` `Text` `Macro` |
-| `Kind::class(self) -> str`          | The token's CSS class: `k` `t` `s` `n` `c` `a` `m`; `""` for `Text` (no span) |
+| `Kind`                              | `Keyword` `Type` `Str` `Number` `Comment` `Attribute` `Text` `Macro` `Function` |
+| `Kind::class(self) -> str`          | The token's CSS class: `k` `t` `s` `n` `c` `a` `m` `f`; `""` for `Text` (no span) |
 
 `Macro` (`m`) marks macro calls (`log!`) and meta template tokens
-(`@macro`, `@Self`); a stylesheet without an `m` rule shows them as
-plain text.
+(`@macro`, `@Self`); `Function` (`f`) marks a function's name where it
+is declared (`fn add`) and called (`f(x)`, `x.len()`). A stylesheet
+without an `m` or `f` rule shows them as plain text.
 
 ## Development
 
