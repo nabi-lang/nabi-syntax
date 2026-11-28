@@ -180,6 +180,10 @@
 
 (format_string) @string
 
+; A hole is code: what it holds is highlighted as outside the string.
+(interpolation
+  value: (_) @embedded)
+
 (format_specifier) @string.special
 
 ; The `:` that opens a format spec is part of it.
