@@ -1297,3 +1297,30 @@ f"<a>
       (interpolation
         (identifier))
       (string_content))))
+
+==================
+ASCII arrow between two values
+==================
+
+let a = bag -> g;
+let f = |x: i64| -> i64 { x };
+
+---
+
+(source_file
+  (let_declaration
+    (identifier)
+    (binary_expression
+      (identifier)
+      (operator)
+      (identifier)))
+  (let_declaration
+    (identifier)
+    (closure_expression
+      (closure_parameters
+        (closure_parameter
+          (identifier)
+          (type_identifier)))
+      (type_identifier)
+      (block
+        (identifier)))))

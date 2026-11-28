@@ -848,6 +848,12 @@ module.exports = grammar({
         field('operator', alias($._ext_operator, $.operator)),
         field('right', $._expression),
       )),
+      // `bag -> g`: between two values `->` spells `→`.
+      prec.left(PREC.additive, seq(
+        field('left', $._expression),
+        field('operator', alias('->', $.operator)),
+        field('right', $._expression),
+      )),
       // `#[infix("~")]`, `#[infix("@")]`: fixed tokens a package gives a
       // binary meaning.
       prec.left(PREC.multiplicative, seq(
