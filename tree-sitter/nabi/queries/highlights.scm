@@ -181,8 +181,7 @@
 (format_string) @string
 
 ; A hole is code: what it holds is highlighted as outside the string.
-(interpolation
-  value: (_) @embedded)
+(interpolation) @embedded
 
 (format_specifier) @string.special
 
