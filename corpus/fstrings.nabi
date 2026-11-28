@@ -18,6 +18,10 @@
 //             ^^^ meta.interpolation.nabi string.quoted.double.nabi
 //                      ^^^ meta.interpolation.nabi string.quoted.double.nabi
 //                          ^^ string.interpolated.nabi
+    f"{total(xs) -> kg:.2} {if ok { 1 } else { 0 }}";
+//     ^^^^^ meta.interpolation.nabi entity.name.function.call.nabi
+//               ^^ meta.interpolation.nabi
+//                          ^^ meta.interpolation.nabi keyword.control.nabi
     f"{x:.2f} {n:0>5d} {v:?} {x:>{w}} {x:>${w}.${p}f} {a::b}";
 //      ^^^^ meta.interpolation.nabi constant.other.format-spec.nabi
 //              ^^^^^ constant.other.format-spec.nabi
